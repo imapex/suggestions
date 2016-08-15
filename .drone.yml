@@ -7,7 +7,7 @@ build:
 
 publish:
   docker:
-    repo: $$DOCKER_USERNAME/$$IMAGE
+    repo: imapex/$$IMAGE
     tag: latest
     username: $$DOCKER_USERNAME
     password: $$DOCKER_PASSWORD
