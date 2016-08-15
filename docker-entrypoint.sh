@@ -1,7 +1,5 @@
 #!/bin/sh
 # Collect static files
-echo "Running Tests"
-python manage.py test
 echo "Collect static files"
 python manage.py collectstatic --noinput
 
