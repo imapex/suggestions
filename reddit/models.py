@@ -216,6 +216,7 @@ def notify_cop_of_tunnel(sender, instance=None, created=False, **kwargs):
     Call REST API to open a spark room
     """
     print(instance.comment_count)
-    if instance.comment_count > 1:
+
+    if (instance.comment_count > 5) or (instance.ups > 10):
 
         resp = create_spark_room(instance)
