@@ -1,7 +1,9 @@
+import os
+import json
+import requests
 from django.contrib.contenttypes.models import ContentType
 from mptt.models import MPTTModel
 from django.db import models
-
 
 class ContentTypeAware(models.Model):
     def get_content_type(self):
@@ -34,3 +36,44 @@ class MttpContentTypeAware(MPTTModel):
 
     class Meta:
         abstract = True
+
+
+def create_spark_room(submission):
+    """
+    #If a submission get's more than X votes, let's open a spark room
+
+    :param submission: submission object
+    :return: response
+
+    """
+    url = os.environ.get('SPARK_URL', 'https://api.ciscospark.com/v1/')
+    token = os.environ.get('SPARK_TOKEN', None)
+
+    # Determine if the room is already created
+
+    rooms_url = url + "rooms"
+    messages_url = url + "messages"
+
+    data = json.dumps({'title': submission.title })
+
+    headers = {
+        'authorization': "Bearer {}".format(token),
+        'content-type': "application/json; charset=utf-8"
+        }
+
+    resp = requests.post(rooms_url, data=data, headers=headers)
+    room_id = resp.json()['id']
+
+    # TODO remove static URL reference
+    intro = 'Based on high activity level @ the imapex suggestions site ' \
+            'this room was automatically created to continue the conversation ' \
+            'You can see the full history of the thread at [http://suggestions.imapex.io/comments/{}] ' \
+            'heres a summary of the submission'.format(submission.pk)
+
+    for m in [intro, submission.text]:
+        # Send intro message
+        data = json.dumps({'markdown': m,
+                           'roomId': room_id})
+        resp = requests.post(messages_url, data=data, headers=headers)
+        print(resp.text)
+
