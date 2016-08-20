@@ -7,7 +7,7 @@ echo "Make Migrations"
 # all app migrations should go on a single line
 # http://stackoverflow.com/questions/36153748/django-1-9-makemigrations-no-changes-detected
 
-python manage.py makemigrations reddit django_reddit
+python manage.py makemigrations reddit
 
 
 # Apply database migrations
