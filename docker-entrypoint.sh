@@ -12,7 +12,11 @@ python manage.py makemigrations reddit users comments submissions
 
 # Apply database migrations
 echo "Apply database migrations"
-python manage.py migrate
+python manage.py migrate reddit
+python manage.py migrate users
+python manage.py migrate comments
+pythom manage.py migrate submissions
+
 
 # Start server
 echo "Starting server"
