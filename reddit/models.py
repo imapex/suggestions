@@ -18,6 +18,7 @@ class Submission(ContentTypeAware):
     customer = models.TextField(max_length=100, blank=True)
     revenue = models.TextField(max_length=100, blank=True)
     text_html = models.TextField(blank=True)
+    spark_room = models.TextField(blank=True)
     ups = models.IntegerField(default=0)
     downs = models.IntegerField(default=0)
     score = models.IntegerField(default=0)
