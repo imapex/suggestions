@@ -4,10 +4,10 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils import timezone
+from django.dispatch import receiver
 from mptt.models import MPTTModel, TreeForeignKey
-from django_reddit.utils.model_utils import ContentTypeAware, MttpContentTypeAware
-
-
+from django_reddit.utils.model_utils import ContentTypeAware, MttpContentTypeAware, create_spark_room
+from django.db.models.signals import post_save
 
 class Submission(ContentTypeAware):
     author_name = models.CharField(null=False, max_length=12)
@@ -207,3 +207,14 @@ class Vote(models.Model):
         self.vote_object.save()
         self.vote_object.author.save()
         return vote_diff
+
+
+@receiver(post_save, sender=Submission)
+def notify_cop_of_tunnel(sender, instance=None, created=False, **kwargs):
+    """
+    Call REST API to open a spark room
+    """
+    print(instance.comment_count)
+    if instance.comment_count > 1:
+
+        resp = create_spark_room(instance)
