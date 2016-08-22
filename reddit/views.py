@@ -147,6 +147,9 @@ def post_comment(request):
                              parent=parent_object)
 
     comment.save()
+
+    if parent_object.comment_count == 5:
+        messages.success(request, "Created a new spark room based on high activity")
     return JsonResponse({'msg': "Your comment has been posted."})
 
 

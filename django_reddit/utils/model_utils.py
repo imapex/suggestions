@@ -38,12 +38,12 @@ class MttpContentTypeAware(MPTTModel):
         abstract = True
 
 
-def create_spark_room(submission):
+def create_spark_room(submission, contributors):
     """
-    #If a submission get's more than X votes, let's open a spark room
+    opens a spark room for a submission, adds contributors to the room
 
     :param submission: submission object
-    :return: response
+    :return: str roomId for new spark room
 
     """
     url = os.environ.get('SPARK_URL', 'https://api.ciscospark.com/v1/')
@@ -66,14 +66,20 @@ def create_spark_room(submission):
 
     # TODO remove static URL reference
     intro = 'Based on high activity level @ the imapex suggestions site ' \
-            'this room was automatically created to continue the conversation ' \
-            'You can see the full history of the thread at [http://suggestions.imapex.io/comments/{}] ' \
-            'heres a summary of the submission'.format(submission.pk)
+            'this room was automatically created, and all contributors to the' \
+            'thread were automatically invited to continue the conversation ' \
+            'You can see the full history of the thread at http://suggestions.imapex.io/comments/{} ' \
+            'heres a summary of the submission:<br>'.format(submission.pk)
 
     for m in [intro, submission.text]:
         # Send intro message
         data = json.dumps({'markdown': m,
                            'roomId': room_id})
         resp = requests.post(messages_url, data=data, headers=headers)
-        print(resp.text)
 
+    # invite contributors
+    for c in contributors:
+        d = json.dumps({"roomId": room_id, "personEmail": c})
+        resp = requests.post(url + "memberships", data=d, headers=headers)
+
+    return room_id

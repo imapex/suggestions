@@ -1,4 +1,5 @@
 import mistune
+import base64
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
@@ -19,6 +20,7 @@ class Submission(ContentTypeAware):
     revenue = models.TextField(max_length=100, blank=True)
     text_html = models.TextField(blank=True)
     spark_room = models.TextField(blank=True)
+    spark_room_url = models.URLField(blank=True)
     ups = models.IntegerField(default=0)
     downs = models.IntegerField(default=0)
     score = models.IntegerField(default=0)
@@ -29,6 +31,20 @@ class Submission(ContentTypeAware):
         if self.text:
             html = mistune.markdown(self.text)
             self.text_html = html
+
+    def save(self, *args, **kwargs):
+
+        if not self.spark_room:
+
+            if (self.comment_count > 5) or (self.ups > 10):
+                cs = Comment.objects.filter(submission=self)
+                contributors = [c.author.email for c in cs]
+                room = create_spark_room(self, contributors)
+                self.spark_room = str(room)
+                room_uuid = base64.b64decode(room).split(b"/")[-1].decode("utf-8")
+                self.spark_room_url = 'https://web.ciscospark.com/#/rooms/{}'.format(str(room_uuid))
+
+        super(Submission, self).save(*args, **kwargs)
 
     @property
     def linked_url(self):
@@ -209,14 +225,17 @@ class Vote(models.Model):
         self.vote_object.author.save()
         return vote_diff
 
-
-@receiver(post_save, sender=Submission)
-def notify_cop_of_tunnel(sender, instance=None, created=False, **kwargs):
-    """
-    Call REST API to open a spark room
-    """
-    print(instance.comment_count)
-
-    if (instance.comment_count > 5) or (instance.ups > 10):
-
-        resp = create_spark_room(instance)
+#
+# @receiver(post_save, sender=Submission)
+# def spark_room(sender, instance=None, created=False, **kwargs):
+#     """
+#     Automatically create spark room for "busy" rooms REST API to open a spark room
+#     """
+#     if (instance.comment_count > 5) or (instance.ups > 10):
+#         if not instance.spark_room:
+#             cs = Comment.objects.filter(submission=instance)
+#             contributors = [c.author.email for c in cs]
+#             room = create_spark_room(instance, contributors)
+#             instance.spark_room = room
+#             instance.save()
+#
