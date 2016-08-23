@@ -101,12 +101,13 @@ def register(request):
 
     if request.method == "POST":
         user_form = UserForm(request.POST)
-
+        print(user_form)
         if user_form.is_valid():
             user = user_form.save()
             user.set_password(user.password)
             user.save()
             reddit_user = RedditUser()
+            reddit_user.email = user_form.data['email']
             reddit_user.user = user
             reddit_user.save()
             user = authenticate(username=request.POST['username'],

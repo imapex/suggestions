@@ -34,13 +34,41 @@ h3, h4 {
     .carousel-caption {
         display: none; /* Hide the carousel text when the screen is less than 600 pixels wide */
     }
+    .container{
+        padding: 25px 25px;
+        overflow-x: hidden;
+    }
 }
+
 .bg-1 {
     background: #2d2d30;
     color: #bdbdbd;
 }
 .bg-1 h3 {color: #fff;}
 .bg-1 p {font-style: italic;}
+
+.row-bg-2 {
+    background: #777777;
+    color: #555555;
+}
+.row-bg-2 h3 {
+    color: #777777;
+}
+.row-bg-2 p {
+    font-style: italic;
+}
+
+.row-bg-1 {
+    color: #555555;
+}
+.row-bg-1 h3 {
+
+}
+.row-bg-1 p {
+    font-style: italic;
+}
+
+
 .list-group-item:first-child {
     border-top-right-radius: 0;
     border-top-left-radius: 0;
@@ -137,4 +165,8 @@ footer a:hover {
 }
 textarea {
     resize: none;
+}
+
+.row {
+    padding-top: 20px;
 }
