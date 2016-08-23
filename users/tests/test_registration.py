@@ -81,7 +81,8 @@ class RegistrationPostTestCase(TestCase):
 
     def test_valid_data(self):
         test_data = {'username': 'username',
-                     'password': 'password'}
+                     'password': 'password',
+                     'email': 'me@my.net'}
 
         response = self.c.post(reverse('register'), data=test_data)
         self.assertRedirects(response, reverse('frontpage'))

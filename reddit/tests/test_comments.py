@@ -201,7 +201,8 @@ class TestPostingComment(TestCase):
         test_data = {
             'parentType': 'comment',
             'parentId': comment.id,
-            'commentContent': 'thread reply comment'
+            'commentContent': 'thread reply comment',
+            'comment_count': 5
         }
 
         r = self.c.post(reverse('post_comment'), data=test_data)
