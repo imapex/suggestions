@@ -20,6 +20,15 @@ class UserForm(forms.ModelForm):
         min_length=3,
         required=True,
         validators=[alphanumeric])
+    email = forms.EmailField(widget=forms.EmailInput(
+        attrs={'class': "form-control",
+               'placeholder': 'Email address',
+               'id': "email",
+               'type': "text"}),
+        required=False
+    )
+
+
     password = forms.CharField(widget=forms.PasswordInput(
         attrs=
         {'class': "form-control",
@@ -28,9 +37,10 @@ class UserForm(forms.ModelForm):
         min_length=4,
         required=True)
 
+
     class Meta:
         model = User
-        fields = ('username', 'password')
+        fields = ('email', 'username', 'password')
 
 
 class ProfileForm(forms.ModelForm):

@@ -225,17 +225,3 @@ class Vote(models.Model):
         self.vote_object.author.save()
         return vote_diff
 
-#
-# @receiver(post_save, sender=Submission)
-# def spark_room(sender, instance=None, created=False, **kwargs):
-#     """
-#     Automatically create spark room for "busy" rooms REST API to open a spark room
-#     """
-#     if (instance.comment_count > 5) or (instance.ups > 10):
-#         if not instance.spark_room:
-#             cs = Comment.objects.filter(submission=instance)
-#             contributors = [c.author.email for c in cs]
-#             room = create_spark_room(instance, contributors)
-#             instance.spark_room = room
-#             instance.save()
-#
