@@ -15,7 +15,7 @@ echo "Apply database migrations"
 python manage.py migrate reddit
 python manage.py migrate users
 python manage.py migrate comments
-pythom manage.py migrate submissions
+python manage.py migrate submissions
 
 
 # Start server
