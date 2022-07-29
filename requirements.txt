@@ -8,7 +8,7 @@ django-secure==1.0.1
 django-widget-tweaks==1.4.1
 gunicorn==19.6.0
 mysqlclient
-mistune==0.8.1
+mistune==2.0.3
 six==1.10.0
 static3==0.7.0
 wheel==0.24.0
